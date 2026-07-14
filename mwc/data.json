@@ -1,0 +1,76 @@
+{
+  "subjects": [
+    {
+      "id": 1,
+      "name": "ARTIFICIAL INTELLIGENCE",
+      "color": "#2563eb",
+      "created_at": "2026-07-07T06:05:52.221Z"
+    },
+    {
+      "id": 2,
+      "name": "DATABASE PROGRAMING",
+      "color": "#24eb45",
+      "created_at": "2026-07-07T06:06:08.928Z"
+    },
+    {
+      "id": 3,
+      "name": "INTERNET OF THINGS",
+      "color": "#ddeb24",
+      "created_at": "2026-07-07T06:06:23.572Z"
+    },
+    {
+      "id": 4,
+      "name": "MOBILE WEB COMPUTING",
+      "color": "#eb24e4",
+      "created_at": "2026-07-07T06:06:37.595Z"
+    },
+    {
+      "id": 5,
+      "name": "NETWORK SECURITY",
+      "color": "#eb2424",
+      "created_at": "2026-07-07T06:07:00.974Z"
+    },
+    {
+      "id": 6,
+      "name": "DECISION SUPPORT SYSTEM",
+      "color": "#24c9eb",
+      "created_at": "2026-07-07T06:07:35.248Z"
+    }
+  ],
+  "sessions": [
+    {
+      "id": 1,
+      "subject_id": 1,
+      "date": "2026-07-07",
+      "duration_minutes": 240,
+      "notes": "Artificial Bee Colony",
+      "created_at": "2026-07-07T06:37:57.931Z"
+    },
+    {
+      "id": 2,
+      "subject_id": 2,
+      "date": "2026-07-08",
+      "duration_minutes": 240,
+      "notes": "PSQL",
+      "created_at": "2026-07-07T13:02:15.385Z"
+    }
+  ],
+  "notes": [
+    {
+      "id": 1,
+      "subject_id": 1,
+      "session_id": 1,
+      "date": "2026-07-07",
+      "content": "Implementasi algoritma lebah buatan (ABC) untuk optimasi fungsi numerik kontinu.",
+      "created_at": "2026-07-07T07:21:09.314Z"
+    },
+    {
+      "id": 2,
+      "subject_id": 2,
+      "session_id": null,
+      "date": "60706-02-20",
+      "content": "Belajar mandiri tentang SQL Joins dan Normalisasi data.",
+      "created_at": "2026-07-07T07:22:16.157Z"
+    }
+  ]
+}

@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Study Tracker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Syne:wght@700;800&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .bar-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+      font-size: .85rem;
+    }
+
+    .bar-label {
+      width: 140px;
+      flex-shrink: 0;
+      font-weight: 500;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .bar-track {
+      flex: 1;
+      height: 10px;
+      background: var(--border);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      height: 100%;
+      border-radius: 99px;
+      transition: width .5s cubic-bezier(.4, 0, .2, 1);
+    }
+
+    .bar-val {
+      width: 56px;
+      text-align: right;
+      color: var(--muted);
+      font-size: .78rem;
+      flex-shrink: 0;
+    }
+
+    /* ── Pages ────────────────────────────────────────────────────── */
+    -->.page {
+      display: none;
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    /* ── Responsive ───────────────────────────────────────────────── */
+    -->@media (max-width: 720px) {
+      .sidebar {
+        width: 60px;
+      }
+
+      .sidebar-logo .wordmark,
+      .sidebar-logo .tagline,
+      .nav-item span {
+        display: none;
+      }
+
+      .nav-item {
+        justify-content: center;
+        padding: 12px;
+        border-left: none;
+        border-bottom: 3px solid transparent;
+      }
+
+      .nav-item.active {
+        border-left: none;
+        border-bottom-color: var(--accent);
+      }
+
+      .main {
+        margin-left: 60px;
+        padding: 20px 16px;
+      }
+
+      .stats-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 480px) {a
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app">
+    <!-- ── Sidebar ─────────────────────────────────────────────────── -->
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <div class="wordmark">StudyLog</div>
+        <div class="tagline">Track your progress</div>
+      </div>
+      <nav class="nav">
+        <div class="nav-item active" data-page="dashboard" onclick="switchPage('dashboard')">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <rect x="3" y="3" width="7" height="7" rx="1" />
+            <rect x="14" y="3" width="7" height="7" rx="1" />
+            <rect x="3" y="14" width="7" height="7" rx="1" />
+            <rect x="14" y="14" width="7" height="7" rx="1" />
+          </svg>
+          <span>Dashboard</span>
+        </div>
+        <div class="nav-item" data-page="subjects" onclick="switchPage('subjects')">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+          </svg>
+          <span>Mata Kuliah</span>
+        </div>
+        <div class="nav-item" data-page="sessions" onclick="switchPage('sessions')">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="10" />
+            <polyline points="12 6 12 12 16 14" />
+          </svg>
+          <span>Sesi Belajar</span>
+        </div>
+        <div class="nav-item" data-page="materi" onclick="switchPage('materi')">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path
+              d="M9 12h6m-6 4h6m2 5H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5.586a1 1 0 0 1 .707.293l5.414 5.414a1 1 0 0 1 .293.707V19a2 2 0 0 1-2 2z" />
+          </svg>
+          <span>Materi</span>
+        </div>
+      </nav>
+    </aside>
+
+    <!-- ── Main ───────────────────────────────────────────────────── -->
+    <main class="main">
+
+      <!-- DASHBOARD ─────────────────────────────────────────────── -->
+      <div class="page active" id="page-dashboard">
+        <div class="page-header">
+          <div>
+            <div class="page-title">Dashboard</div>
+            <div class="page-sub" id="dash-date"></div>
+          </div>
+        </div>
+
+        <div class="stats-grid">
+          <div class="card stat-card">
+            <div class="stat-label">Total Jam</div>
+            <div class="stat-value" id="stat-hours">0</div>
+            <div class="stat-sub">jam belajar</div>
+          </div>
+          <div class="card stat-card">
+            <div class="stat-label">Sesi</div>
+            <div class="stat-value" id="stat-sessions">0</div>
+            <div class="stat-sub">sesi tercatat</div>
+          </div>
+          <div class="card stat-card">
+            <div class="stat-label">Mata Kuliah</div>
+            <div class="stat-value" id="stat-subjects">0</div>
+            <div class="stat-sub">aktif</div>
+          </div>
+        </div>
+
+        <div class="card" style="padding:24px;">
+          <div style="font-weight:600;margin-bottom:18px;font-size:.9rem;">Distribusi Waktu per Mata Kuliah</div>
+          <div id="bar-chart">
+            <div class="empty">
+              <div class="empty-desc">Belum ada data</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:20px;">
+          <div style="padding:16px 20px;font-weight:600;font-size:.9rem;border-bottom:1px solid var(--border);">Sesi
+            Terbaru</div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Mata Kuliah</th>
+                  <th>Tanggal</th>
+                  <th>Durasi</th>
+                  <th>Catatan</th>
+                </tr>
+              </thead>
+              <tbody id="recent-sessions"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- MATA KULIAH ────────────────────────────────────────────── -->
+      <div class="page" id="page-subjects">
+        <div class="page-header">
+          <div>
+            <div class="page-title">Mata Kuliah</div>
+            <div class="page-sub">Kelola daftar mata kuliah</div>
+          </div>
+          <button class="btn btn-primary" onclick="openSubjectModal()">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+              <line x1="12" y1="5" x2="12" y2="19" />
+              <line x1="5" y1="12" x2="19" y2="12" />
+            </svg>
+            Tambah
+          </button>
+        </div>
+        <div class="subjects-grid" id="subjects-grid"></div>
+      </div>
+
+      <!-- SESI BELAJAR ───────────────────────────────────────────── -->
+      <div class="page" id="page-sessions">
+        <div class="page-header">
+          <div>
+            <div class="page-title">Sesi Belajar</div>
+            <div class="page-sub">Catat setiap sesi belajar kamu</div>
+          </div>
+          <button class="btn btn-primary" onclick="openSessionModal()">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+              <line x1="12" y1="5" x2="12" y2="19" />
+              <line x1="5" y1="12" x2="19" y2="12" />
+            </svg>
+            Tambah Sesi
+          </button>
+        </div>
+        <div class="card">
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Mata Kuliah</th>
+                  <th>Tanggal</th>
+                  <th>Durasi</th>
+                  <th>Catatan</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="sessions-table"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- MATERI BELAJAR ─────────────────────────────────────────── -->
+      <div class="page" id="page-materi">
+        <div class="page-header">
+          <div>
+            <div class="page-title">Materi Belajar</div>
+            <div class="page-sub">Review materi pelajaran sebelum UAS</div>
+          </div>
+          <button class="btn btn-primary" onclick="openNoteModal(null, null)">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+              <line x1="12" y1="5" x2="12" y2="19" />
+              <line x1="5" y1="12" x2="19" y2="12" />
+            </svg>
+            Catatan Mandiri
+          </button>
+        </div>
+        <div class="card" style="padding:18px;margin-bottom:20px;">
+          <div class="form-group" style="margin-bottom:0;max-width:320px;">
+            <label>Filter Mata Kuliah</label>
+            <select id="materi-subject-select" onchange="filterMateriNotes()"></select>
+          </div>
+        </div>
+        <div id="materi-list">
+          <!-- Renders list of study notes -->
+        </div>
+      </div>
+
+
+    </main>
+  </div>
+
+  <!-- ── Modal: Subject ──────────────────────────────────────────────── -->
+  <div class="modal-overlay" id="modal-subject">
+    <div class="modal">
+      <div class="modal-title" id="subject-modal-title">Tambah Mata Kuliah</div>
+      <div class="form-group">
+        <label>Nama Mata Kuliah</label>
+        <input type="text" id="subject-name" placeholder="cth: Kecerdasan Buatan" />
+      </div>
+      <div class="form-group">
+        <label>Warna</label>
+        <div class="color-row">
+          <input type="color" id="subject-color" value="#2563EB" />
+          <span style="font-size:.8rem;color:var(--muted)">Pilih warna penanda</span>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" onclick="closeModal('modal-subject')">Batal</button>
+        <button class="btn btn-primary" onclick="saveSubject()">Simpan</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Modal: Session ─────────────────────────────────────────────── -->
+  <div class="modal-overlay" id="modal-session">
+    <div class="modal">
+      <div class="modal-title" id="session-modal-title">Catat Sesi Belajar</div>
+      <div class="form-group">
+        <label>Mata Kuliah</label>
+        <select id="session-subject"></select>
+      </div>
+      <div class="form-group">
+        <label>Tanggal</label>
+        <input type="date" id="session-date" />
+      </div>
+      <div class="form-group">
+        <label>Durasi (menit)</label>
+        <input type="number" id="session-duration" placeholder="cth: 90" min="1" max="1440" />
+      </div>
+      <div class="form-group">
+        <label>Catatan <span style="color:var(--muted);font-weight:400">(opsional)</span></label>
+        <textarea id="session-notes" placeholder="Topik yang dipelajari..."></textarea>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" onclick="closeModal('modal-session')">Batal</button>
+        <button class="btn btn-primary" onclick="saveSession()">Simpan</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Modal: Note ────────────────────────────────────────────────── -->
+  <div class="modal-overlay" id="modal-note">
+    <div class="modal">
+      <div class="modal-title" id="note-modal-title">Tambah Catatan</div>
+      <input type="hidden" id="note-id" />
+      <input type="hidden" id="note-session-id" />
+
+      <div class="form-group" id="note-subject-group">
+        <label>Mata Kuliah</label>
+        <select id="note-subject"></select>
+      </div>
+
+      <div class="form-group" id="note-date-group">
+        <label>Tanggal</label>
+        <input type="date" id="note-date" />
+      </div>
+
+      <div class="form-group">
+        <label>Isi Catatan Materi</label>
+        <textarea id="note-content" placeholder="Tulis isi materi yang dipelajari..."
+          style="min-height:120px;"></textarea>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-ghost" onclick="closeModal('modal-note')">Batal</button>
+        <button class="btn btn-primary" onclick="saveNote()">Simpan</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Toast ───────────────────────────────────────────────────────── -->
+  <div id="toast"></div>
+
+  <script src="app.js"></script>
+  <script src="dashboard.js"></script>
+  <script src="subjects.js"></script>
+  <script src="sessions.js"></script>
+  <script src="notes.js"></script>
+</body>
+
+</html>
